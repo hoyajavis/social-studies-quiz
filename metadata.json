@@ -1,0 +1,5 @@
+{
+  "name": "Social Studies Quiz Master",
+  "description": "A 6th grade social studies spelling and definition quiz with text-to-speech feedback and performance tracking.",
+  "requestFramePermissions": ["microphone"]
+}
