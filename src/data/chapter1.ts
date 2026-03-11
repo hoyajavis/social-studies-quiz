@@ -8,9 +8,9 @@ export const CHAPTER_1_QUESTIONS: Question[] = [
     category: "Vocabulary List #1",
     example: "These collections provide an excellent resource for finding a new interest and learning about American culture and history.",
     alternatives: [
-      { text: "These collections provide an excellent resource for finding a new interest and learning about American _______ and history.", answer: "culture" },
-      { text: "(n.) the _______, customs, arts, etc. of a particular social group, place, or time.", answer: "beliefs" },
-      { text: "(n.) the beliefs, customs, arts, etc. of a particular social _______, place, or time.", answer: "group" }
+      { text: "These collections provide an excellent resource for finding a new interest and learning about American __________ and history.", answer: "culture" },
+      { text: "(n.) the __________, customs, arts, etc. of a particular social group, place, or time.", answer: "beliefs" },
+      { text: "(n.) the beliefs, customs, arts, etc. of a particular social __________, place, or time.", answer: "group" }
     ]
   },
   {
@@ -20,9 +20,9 @@ export const CHAPTER_1_QUESTIONS: Question[] = [
     category: "Vocabulary List #1",
     example: "Akhenaten’s successor tried to steer religion back to polytheism.",
     alternatives: [
-      { text: "Akhenaten’s successor tried to steer religion back to _______.", answer: "polytheism" },
-      { text: "(n.) belief in or _______ of more than one god.", answer: "worship" },
-      { text: "(n.) belief in or worship of more than _______ god.", answer: "one" }
+      { text: "Akhenaten’s successor tried to steer religion back to __________.", answer: "polytheism" },
+      { text: "(n.) belief in or __________ of more than one god.", answer: "worship" },
+      { text: "(n.) belief in or worship of more than __________ god.", answer: "one" }
     ]
   },
   {
@@ -32,9 +32,9 @@ export const CHAPTER_1_QUESTIONS: Question[] = [
     category: "Vocabulary List #1",
     example: "Christianity, Islam, and Judaism are based on monotheism.",
     alternatives: [
-      { text: "Christianity, Islam, and Judaism are based on _______.", answer: "monotheism" },
-      { text: "(n.) the doctrine or belief that there is _______ one god.", answer: "only" },
-      { text: "(n.) the _______ or belief that there is only one god.", answer: "doctrine" }
+      { text: "Christianity, Islam, and Judaism are based on __________.", answer: "monotheism" },
+      { text: "(n.) the doctrine or belief that there is __________ one god.", answer: "only" },
+      { text: "(n.) the __________ or belief that there is only one god.", answer: "doctrine" }
     ]
   },
   {
@@ -44,9 +44,9 @@ export const CHAPTER_1_QUESTIONS: Question[] = [
     category: "Vocabulary List #1",
     example: "Give it more sun in cool climates and more shade in warm climates.",
     alternatives: [
-      { text: "Give it more sun in cool _______ and more shade in warm climates.", answer: "climates" },
-      { text: "(n.) the average course or condition of the _______ at a place usually over a period of years.", answer: "weather" },
-      { text: "(n.) the average course or condition of the weather at a place usually over a period of _______.", answer: "years" }
+      { text: "Give it more sun in cool __________ and more shade in warm climates.", answer: "climates" },
+      { text: "(n.) the average course or condition of the __________ at a place usually over a period of years.", answer: "weather" },
+      { text: "(n.) the average course or condition of the weather at a place usually over a period of __________.", answer: "years" }
     ]
   },
   {
@@ -56,9 +56,9 @@ export const CHAPTER_1_QUESTIONS: Question[] = [
     category: "Vocabulary List #1",
     example: "On the day of the equinox, both of Earth’s hemispheres get an equal amount of sunlight.",
     alternatives: [
-      { text: "On the day of the equinox, both of Earth’s _______ get an equal amount of sunlight.", answer: "hemispheres" },
-      { text: "(n.) _______ of a spherical or roughly spherical body (such as a planet).", answer: "half" },
-      { text: "(n.) half of a _______ or roughly spherical body (such as a planet).", answer: "spherical" }
+      { text: "On the day of the equinox, both of Earth’s __________ get an equal amount of sunlight.", answer: "hemispheres" },
+      { text: "(n.) __________ of a spherical or roughly spherical body (such as a planet).", answer: "half" },
+      { text: "(n.) half of a __________ or roughly spherical body (such as a planet).", answer: "spherical" }
     ]
   },
   {
@@ -68,9 +68,9 @@ export const CHAPTER_1_QUESTIONS: Question[] = [
     category: "Vocabulary List #1",
     example: "Longitude measures distances from the prime meridian.",
     alternatives: [
-      { text: "Longitude measures distances from the _______ _______.", answer: "prime meridian" },
-      { text: "(n.) the meridian of _______ degrees longitude which runs through the original site of the Royal Observatory.", answer: "0" },
-      { text: "(n.) the meridian of 0 degrees _______ which runs through the original site of the Royal Observatory.", answer: "longitude" }
+      { text: "Longitude measures distances from the __________ __________.", answer: "prime meridian" },
+      { text: "(n.) the meridian of __________ degrees longitude which runs through the original site of the Royal Observatory.", answer: "0" },
+      { text: "(n.) the meridian of 0 degrees __________ which runs through the original site of the Royal Observatory.", answer: "longitude" }
     ]
   },
   {
@@ -80,9 +80,9 @@ export const CHAPTER_1_QUESTIONS: Question[] = [
     category: "Vocabulary List #1",
     example: "Now the competitions that once united the fractured city-states of Greece connect people around the globe.",
     alternatives: [
-      { text: "Now the competitions that once united the fractured _______-_______ of Greece connect people around the globe.", answer: "city-states" },
-      { text: "(n.): an area consisting of a city and surrounding _______.", answer: "territory" },
-      { text: "(n.): an area _______ of a city and surrounding territory.", answer: "consisting" }
+      { text: "Now the competitions that once united the fractured __________-__________ of Greece connect people around the globe.", answer: "city-states" },
+      { text: "(n.): an area consisting of a city and surrounding __________.", answer: "territory" },
+      { text: "(n.): an area __________ of a city and surrounding territory.", answer: "consisting" }
     ]
   },
   {
@@ -92,9 +92,9 @@ export const CHAPTER_1_QUESTIONS: Question[] = [
     category: "Vocabulary List #1",
     example: "The witness refused to cooperate, hindering the investigation.",
     alternatives: [
-      { text: "The witness refused to cooperate, _______ the investigation.", answer: "hindering" },
-      { text: "(v.) to make _______ or difficult the progress of.", answer: "slow" },
-      { text: "(v.) to make slow or _______ the progress of.", answer: "difficult" }
+      { text: "The witness refused to cooperate, __________ the investigation.", answer: "hindering" },
+      { text: "(v.) to make __________ or difficult the progress of.", answer: "slow" },
+      { text: "(v.) to make slow or __________ the progress of.", answer: "difficult" }
     ]
   },
   {
@@ -104,9 +104,9 @@ export const CHAPTER_1_QUESTIONS: Question[] = [
     category: "Vocabulary List #1",
     example: "Warm weather encourages plant growth.",
     alternatives: [
-      { text: "Warm weather _______ plant growth.", answer: "encourages" },
-      { text: "(v.) to _______ on; to give help; to inspire with courage, etc.", answer: "spur" },
-      { text: "(v.) to spur on; to give help; to _______ with courage, etc.", answer: "inspire" }
+      { text: "Warm weather __________ plant growth.", answer: "encourages" },
+      { text: "(v.) to __________ on; to give help; to inspire with courage, etc.", answer: "spur" },
+      { text: "(v.) to spur on; to give help; to __________ with courage, etc.", answer: "inspire" }
     ]
   },
   {
@@ -116,9 +116,9 @@ export const CHAPTER_1_QUESTIONS: Question[] = [
     category: "Vocabulary List #1",
     example: "He won a significant amount of money.",
     alternatives: [
-      { text: "He won a _______ amount of money.", answer: "significant" },
-      { text: "(adj.) to be _______; to have meaning.", answer: "important" },
-      { text: "(adj.) to be important; to have _______.", answer: "meaning" }
+      { text: "He won a __________ amount of money.", answer: "significant" },
+      { text: "(adj.) to be __________; to have meaning.", answer: "important" },
+      { text: "(adj.) to be important; to have __________.", answer: "meaning" }
     ]
   }
 ];

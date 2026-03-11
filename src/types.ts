@@ -15,8 +15,8 @@ export interface Question {
 export type QuizMode = 'spelling' | 'conceptual' | 'definition' | 'contextual';
 
 export interface Progress {
-  definitionUnlocked: boolean;
   contextualUnlocked: boolean;
+  conceptualUnlocked: boolean;
 }
 
 export interface QuizState {

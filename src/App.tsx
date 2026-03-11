@@ -27,8 +27,8 @@ export default function App() {
   const [feedback, setFeedback] = useState<{ isCorrect: boolean; message: string } | null>(null);
   const [highScores, setHighScores] = useState<HighScore[]>([]);
   const [progress, setProgress] = useState<Progress>({
-    definitionUnlocked: false,
-    contextualUnlocked: false
+    contextualUnlocked: false,
+    conceptualUnlocked: false
   });
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   
@@ -59,10 +59,10 @@ export default function App() {
     // Update progress
     if (percentage >= 70) {
       let updatedProgress = { ...progress };
-      if (mode === 'conceptual') {
-        updatedProgress.definitionUnlocked = true;
-      } else if (mode === 'definition') {
+      if (mode === 'definition') {
         updatedProgress.contextualUnlocked = true;
+      } else if (mode === 'contextual') {
+        updatedProgress.conceptualUnlocked = true;
       }
       setProgress(updatedProgress);
       localStorage.setItem('social-studies-quiz-progress', JSON.stringify(updatedProgress));
@@ -195,6 +195,18 @@ export default function App() {
     setFeedback(null);
   };
 
+  const clearProgress = () => {
+    if (window.confirm("Are you sure you want to clear all progress and reset quiz levels?")) {
+      setHighScores([]);
+      setProgress({
+        contextualUnlocked: false,
+        conceptualUnlocked: false
+      });
+      localStorage.removeItem('social-studies-quiz-scores');
+      localStorage.removeItem('social-studies-quiz-progress');
+    }
+  };
+
   if (!mode || !state) {
     return (
       <div className="min-h-screen bg-[#F5F5F0] text-[#1A1A1A] p-6 font-serif">
@@ -244,39 +256,19 @@ export default function App() {
               </div>
               
               <div className="space-y-4">
-                {/* Mode 1: Conceptual */}
+                {/* Level 1: Core Definitions */}
                 <button 
-                  onClick={() => startQuiz('conceptual')}
+                  onClick={() => startQuiz('definition')}
                   className="w-full p-4 rounded-2xl border border-[#E5E5E0] hover:border-[#5A5A40] transition-all text-left flex items-center justify-between group"
                 >
                   <div>
-                    <h3 className="font-semibold text-[#5A5A40]">1. Conceptual Learning</h3>
-                    <p className="text-xs text-gray-500">Fill in blanks with the word provided. Covers all terms.</p>
+                    <h3 className="font-semibold text-[#5A5A40]">1. Core Definitions</h3>
+                    <p className="text-xs text-gray-500">Identify the term from its full definition.</p>
                   </div>
                   <ChevronRight size={18} className="text-gray-300 group-hover:text-[#5A5A40]" />
                 </button>
 
-                {/* Mode 2: Original Definition */}
-                <button 
-                  onClick={() => progress.definitionUnlocked && startQuiz('definition')}
-                  disabled={!progress.definitionUnlocked}
-                  className={cn(
-                    "w-full p-4 rounded-2xl border transition-all text-left flex items-center justify-between group",
-                    progress.definitionUnlocked 
-                      ? "border-[#E5E5E0] hover:border-[#5A5A40]" 
-                      : "bg-gray-50 border-transparent opacity-60 cursor-not-allowed"
-                  )}
-                >
-                  <div>
-                    <h3 className="font-semibold text-[#5A5A40]">
-                      2. Original Definition {!progress.definitionUnlocked && "🔒"}
-                    </h3>
-                    <p className="text-xs text-gray-500">Identify the term from its full definition.</p>
-                  </div>
-                  {progress.definitionUnlocked && <ChevronRight size={18} className="text-gray-300 group-hover:text-[#5A5A40]" />}
-                </button>
-
-                {/* Mode 3: Contextual */}
+                {/* Level 2: Contextual Usage */}
                 <button 
                   onClick={() => progress.contextualUnlocked && startQuiz('contextual')}
                   disabled={!progress.contextualUnlocked}
@@ -289,22 +281,42 @@ export default function App() {
                 >
                   <div>
                     <h3 className="font-semibold text-[#5A5A40]">
-                      3. Contextual Application {!progress.contextualUnlocked && "🔒"}
+                      2. Contextual Usage {!progress.contextualUnlocked && "🔒"}
                     </h3>
                     <p className="text-xs text-gray-500">Use context clues from example sentences.</p>
                   </div>
                   {progress.contextualUnlocked && <ChevronRight size={18} className="text-gray-300 group-hover:text-[#5A5A40]" />}
                 </button>
+
+                {/* Level 3: Deep Concept Mastery */}
+                <button 
+                  onClick={() => progress.conceptualUnlocked && startQuiz('conceptual')}
+                  disabled={!progress.conceptualUnlocked}
+                  className={cn(
+                    "w-full p-4 rounded-2xl border transition-all text-left flex items-center justify-between group",
+                    progress.conceptualUnlocked 
+                      ? "border-[#E5E5E0] hover:border-[#5A5A40]" 
+                      : "bg-gray-50 border-transparent opacity-60 cursor-not-allowed"
+                  )}
+                >
+                  <div>
+                    <h3 className="font-semibold text-[#5A5A40]">
+                      3. Deep Concept Mastery {!progress.conceptualUnlocked && "🔒"}
+                    </h3>
+                    <p className="text-xs text-gray-500">Master specific components of each definition.</p>
+                  </div>
+                  {progress.conceptualUnlocked && <ChevronRight size={18} className="text-gray-300 group-hover:text-[#5A5A40]" />}
+                </button>
               </div>
 
-              {!progress.definitionUnlocked && (
+              {!progress.contextualUnlocked && (
                 <p className="mt-4 text-[10px] text-gray-400 italic text-center">
-                  Get 70% or higher on Conceptual to unlock Original Definition.
+                  Get 70% or higher on Core Definitions to unlock Contextual Usage.
                 </p>
               )}
-              {progress.definitionUnlocked && !progress.contextualUnlocked && (
+              {progress.contextualUnlocked && !progress.conceptualUnlocked && (
                 <p className="mt-4 text-[10px] text-gray-400 italic text-center">
-                  Get 70% or higher on Original Definition to unlock Contextual.
+                  Get 70% or higher on Contextual Usage to unlock Deep Concept Mastery.
                 </p>
               )}
             </div>
@@ -312,9 +324,17 @@ export default function App() {
 
           <div className="mt-12 grid md:grid-cols-2 gap-8">
             <div className="bg-white/50 p-6 rounded-[24px] border border-[#E5E5E0]">
-              <div className="flex items-center gap-2 mb-4 text-[#5A5A40]">
-                <History size={20} />
-                <h3 className="font-semibold uppercase tracking-wider text-xs">Recent Performance</h3>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2 text-[#5A5A40]">
+                  <History size={20} />
+                  <h3 className="font-semibold uppercase tracking-wider text-xs">Recent Performance</h3>
+                </div>
+                <button 
+                  onClick={clearProgress}
+                  className="text-[10px] uppercase tracking-widest text-red-500 hover:text-red-700 font-bold flex items-center gap-1 transition-colors"
+                >
+                  <RotateCcw size={10} /> Clear Progress
+                </button>
               </div>
               {highScores.length === 0 ? (
                 <p className="text-sm text-gray-400 italic">No quizzes taken yet.</p>
