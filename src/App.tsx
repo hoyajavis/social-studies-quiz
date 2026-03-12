@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence, useAnimation } from 'motion/react';
 import Markdown from 'react-markdown';
 import { 
   BookOpen, 
@@ -13,11 +13,100 @@ import {
   Settings,
   History,
   GraduationCap,
-  Loader2
+  Loader2,
+  Sparkles
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { INITIAL_QUESTIONS, CHAPTERS } from './data';
 import { Question, QuizMode, QuizState, HighScore, Progress } from './types';
+
+const SparkleEffect = ({ type }: { type: 'sprinkle' | 'correct' | 'incorrect' }) => {
+  const particleCount = type === 'sprinkle' ? 40 : 20;
+  const particles = Array.from({ length: particleCount });
+  
+  const getColors = () => {
+    if (type === 'correct') return ['#22c55e', '#FFD700', '#C0C0C0']; // Green, Gold, Silver
+    if (type === 'incorrect') return ['#ef4444', '#B87333', '#B5A642']; // Red, Copper, Brass
+    return ['#FFD700', '#C0C0C0', '#FFEC8B', '#E8E8E8']; // Gold, Silver for sprinkle
+  };
+
+  const colors = getColors();
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+      {particles.map((_, i) => {
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        if (type === 'sprinkle') {
+          // Path: Middle Right (100, 50) to Middle Upper Left (0, 25)
+          const progress = i / particleCount;
+          const startX = 100 - (progress * 100);
+          const startY = 50 - (progress * 25);
+          const delay = progress * 0.8;
+          
+          return (
+            <motion.div
+              key={i}
+              initial={{ 
+                opacity: 0, 
+                scale: 0,
+                left: `${startX}%`,
+                top: `${startY}%`
+              }}
+              animate={{ 
+                opacity: [0, 1, 1, 0],
+                scale: [0, Math.random() * 1 + 0.5, 0.5, 0],
+                top: [`${startY}%`, `${startY + 20 + Math.random() * 30}%`],
+                left: [`${startX}%`, `${startX + (Math.random() - 0.5) * 10}%`],
+                rotate: [0, 360]
+              }}
+              transition={{ 
+                duration: 2,
+                ease: "easeOut",
+                delay: delay
+              }}
+              className="absolute w-1.5 h-1.5 rounded-full"
+              style={{ 
+                backgroundColor: color,
+                boxShadow: `0 0 8px ${color}`
+              }}
+            />
+          );
+        } else {
+          // Burst effect for correct/incorrect
+          return (
+            <motion.div
+              key={i}
+              initial={{ 
+                opacity: 0, 
+                scale: 0,
+                left: '50%',
+                top: '50%'
+              }}
+              animate={{ 
+                opacity: [0, 1, 0],
+                scale: [0, Math.random() * 2 + 1, 0],
+                left: ['50%', `${50 + (Math.random() - 0.5) * 60}%`],
+                top: ['50%', `${50 + (Math.random() - 0.5) * 60}%`],
+                rotate: Math.random() * 720
+              }}
+              transition={{ 
+                duration: 1.2,
+                ease: "backOut",
+                delay: Math.random() * 0.1
+              }}
+              className="absolute w-2 h-2 rounded-full"
+              style={{ 
+                backgroundColor: color,
+                boxShadow: `0 0 12px ${color}`
+              }}
+            />
+          );
+        }
+      })}
+    </div>
+  );
+};
 
 export default function App() {
   const [mode, setMode] = useState<QuizMode | null>(null);
@@ -31,6 +120,55 @@ export default function App() {
     conceptualUnlocked: false
   });
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+  const [showSparkles, setShowSparkles] = useState<'sprinkle' | 'correct' | 'incorrect' | null>(null);
+  const [isConfirmingClear, setIsConfirmingClear] = useState(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+
+  const initAudio = () => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+  };
+
+  const playSound = (type: 'success' | 'error' | 'transition') => {
+    initAudio();
+    const ctx = audioContextRef.current!;
+    if (ctx.state === 'suspended') ctx.resume();
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    const now = ctx.currentTime;
+
+    if (type === 'success') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523.25, now); // C5
+      osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.1); // C6
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+      osc.start(now);
+      osc.stop(now + 0.3);
+    } else if (type === 'error') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(150, now);
+      osc.frequency.linearRampToValueAtTime(100, now + 0.2);
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+      osc.start(now);
+      osc.stop(now + 0.2);
+    } else if (type === 'transition') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(880, now);
+      osc.frequency.exponentialRampToValueAtTime(440, now + 0.1);
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+      osc.start(now);
+      osc.stop(now + 0.1);
+    }
+  };
   
   useEffect(() => {
     const savedScores = localStorage.getItem('social-studies-quiz-scores');
@@ -164,6 +302,13 @@ export default function App() {
     
     if (isCorrect) {
       setState(prev => prev ? { ...prev, score: prev.score + 1 } : null);
+      setShowSparkles('correct');
+      playSound('success');
+      setTimeout(() => setShowSparkles(null), 1500);
+    } else {
+      setShowSparkles('incorrect');
+      playSound('error');
+      setTimeout(() => setShowSparkles(null), 1500);
     }
 
     setState(prev => {
@@ -177,6 +322,10 @@ export default function App() {
 
   const nextQuestion = () => {
     if (!state) return;
+
+    playSound('transition');
+    setShowSparkles('sprinkle');
+    setTimeout(() => setShowSparkles(null), 2000);
 
     if (state.currentIndex + 1 >= state.questions.length) {
       setState(prev => prev ? { ...prev, isFinished: true } : null);
@@ -196,15 +345,14 @@ export default function App() {
   };
 
   const clearProgress = () => {
-    if (window.confirm("Are you sure you want to clear all progress and reset quiz levels?")) {
-      setHighScores([]);
-      setProgress({
-        contextualUnlocked: false,
-        conceptualUnlocked: false
-      });
-      localStorage.removeItem('social-studies-quiz-scores');
-      localStorage.removeItem('social-studies-quiz-progress');
-    }
+    setHighScores([]);
+    setProgress({
+      contextualUnlocked: false,
+      conceptualUnlocked: false
+    });
+    localStorage.removeItem('social-studies-quiz-scores');
+    localStorage.removeItem('social-studies-quiz-progress');
+    setIsConfirmingClear(false);
   };
 
   if (!mode || !state) {
@@ -329,12 +477,31 @@ export default function App() {
                   <History size={20} />
                   <h3 className="font-semibold uppercase tracking-wider text-xs">Recent Performance</h3>
                 </div>
-                <button 
-                  onClick={clearProgress}
-                  className="text-[10px] uppercase tracking-widest text-red-500 hover:text-red-700 font-bold flex items-center gap-1 transition-colors"
-                >
-                  <RotateCcw size={10} /> Clear Progress
-                </button>
+                <div className="flex items-center gap-2">
+                  {isConfirmingClear ? (
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={clearProgress}
+                        className="text-[10px] uppercase tracking-widest text-red-600 hover:text-red-800 font-bold transition-colors"
+                      >
+                        Confirm Clear
+                      </button>
+                      <button 
+                        onClick={() => setIsConfirmingClear(false)}
+                        className="text-[10px] uppercase tracking-widest text-gray-400 hover:text-gray-600 font-bold transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <button 
+                      onClick={() => setIsConfirmingClear(true)}
+                      className="text-[10px] uppercase tracking-widest text-red-500 hover:text-red-700 font-bold flex items-center gap-1 transition-colors"
+                    >
+                      <RotateCcw size={10} /> Clear Progress
+                    </button>
+                  )}
+                </div>
               </div>
               {highScores.length === 0 ? (
                 <p className="text-sm text-gray-400 italic">No quizzes taken yet.</p>
@@ -442,8 +609,9 @@ export default function App() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="bg-white p-10 rounded-[40px] shadow-sm border border-[#E5E5E0]"
+            className="bg-white p-10 rounded-[40px] shadow-sm border border-[#E5E5E0] relative"
           >
+            {showSparkles && <SparkleEffect type={showSparkles} />}
             <div className="mb-8">
               <span className="text-[10px] uppercase tracking-[0.2em] text-[#5A5A40] font-bold mb-2 block">
                 {currentQuestion.category}
