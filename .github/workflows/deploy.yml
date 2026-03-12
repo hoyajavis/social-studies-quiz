@@ -2,6 +2,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"]
+  workflow_dispatch: # This lets you start the build manually!
 permissions:
   contents: read
   pages: write
@@ -17,7 +18,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Install and Build
         run: |
           npm install
