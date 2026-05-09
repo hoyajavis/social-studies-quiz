@@ -607,7 +607,7 @@ export default function App() {
           </div>
         </header>
 
-        {showSparkles && <SparkleEffect type={showSparkles} />}
+        {showSparkles && <SparkleEffect key={showSparkles} type={showSparkles} />}
 
         <AnimatePresence mode="wait">
           <motion.div 
