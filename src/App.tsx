@@ -123,6 +123,7 @@ export default function App() {
   const [showSparkles, setShowSparkles] = useState<'sprinkle' | 'correct' | 'incorrect' | null>(null);
   const [isConfirmingClear, setIsConfirmingClear] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
+  const sparkleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const initAudio = () => {
     if (!audioContextRef.current) {
@@ -304,11 +305,13 @@ export default function App() {
       setState(prev => prev ? { ...prev, score: prev.score + 1 } : null);
       setShowSparkles('correct');
       playSound('success');
-      setTimeout(() => setShowSparkles(null), 1500);
+      if (sparkleTimeoutRef.current) clearTimeout(sparkleTimeoutRef.current);
+      sparkleTimeoutRef.current = setTimeout(() => setShowSparkles(null), 1500);
     } else {
       setShowSparkles('incorrect');
       playSound('error');
-      setTimeout(() => setShowSparkles(null), 1500);
+      if (sparkleTimeoutRef.current) clearTimeout(sparkleTimeoutRef.current);
+      sparkleTimeoutRef.current = setTimeout(() => setShowSparkles(null), 1500);
     }
 
     setState(prev => {
@@ -325,7 +328,8 @@ export default function App() {
 
     playSound('transition');
     setShowSparkles('sprinkle');
-    setTimeout(() => setShowSparkles(null), 2000);
+    if (sparkleTimeoutRef.current) clearTimeout(sparkleTimeoutRef.current);
+    sparkleTimeoutRef.current = setTimeout(() => setShowSparkles(null), 2000);
 
     if (state.currentIndex + 1 >= state.questions.length) {
       setState(prev => prev ? { ...prev, isFinished: true } : null);
@@ -603,6 +607,8 @@ export default function App() {
           </div>
         </header>
 
+        {showSparkles && <SparkleEffect type={showSparkles} />}
+
         <AnimatePresence mode="wait">
           <motion.div 
             key={state.currentIndex}
@@ -611,7 +617,6 @@ export default function App() {
             exit={{ opacity: 0, x: -20 }}
             className="bg-white p-10 rounded-[40px] shadow-sm border border-[#E5E5E0] relative"
           >
-            {showSparkles && <SparkleEffect type={showSparkles} />}
             <div className="mb-8">
               <span className="text-[10px] uppercase tracking-[0.2em] text-[#5A5A40] font-bold mb-2 block">
                 {currentQuestion.category}
